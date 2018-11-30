@@ -22,7 +22,7 @@ def find_matches(line: str, keyword: str, n: int) -> Dict[str, int]:
     return best_results
 
 
-def process_helper(args) -> Dict[str, int]:
+def _process_helper(args) -> Dict[str, float]:
     '''Passes all of the given arguments to find_matches and returns the result'''
     return find_matches(*args)
 
@@ -42,7 +42,7 @@ def main(file: TextIO, keyword: str, n: int) -> None:
         if not any(lines):
             break
         job_args = [(line, keyword, n) for line in lines]
-        buffer_results = pool.map(process_helper, job_args)
+        buffer_results = pool.map(_process_helper, job_args)
         results_dict = dict(ChainMap(*buffer_results, best_results))  # make a single dict from a list of dicts
         best_results = {}
         for i in sorted(results_dict, key=results_dict.get)[:n]:  # keep only the best n results
